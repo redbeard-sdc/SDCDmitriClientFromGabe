@@ -81,8 +81,29 @@ router.get('/hotels', async (req, res) => {
  */
 
 router.get('/hotel', async (req, res) => {
-  const hotel = await knex('hotels').where({ _id: 100 });
-  res.json(hotel[0]);
+  let hotel = await knex('hotels').where({ _id: 100 });
+  hotel = hotel[0];
+  hotel.description = hotel.adescription;
+  hotel.name = hotel.aname;
+  hotel.url = hotel.aurl;
+  hotel.address = {
+    street: hotel.street,
+    city: hotel.city,
+    state: hotel.astate,
+    zipcode: hotel.zip,
+    county: hotel.country
+  };
+  delete hotel.adescription;
+  delete hotel.aname;
+  delete hotel.aurl;
+  delete hotel.street;
+  delete hotel.city;
+  delete hotel.astate;
+  delete hotel.zipcode;
+  delete hotel.country;
+
+
+  res.json(hotel);
 });
 
 // router.get('/hotel', async (req, res) => {
@@ -98,26 +119,56 @@ router.get('/hotel', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/general', async (req, res) => {
-  const reviews = await knex('reviews').where({ _id: req.params.id }).limit(1);
+  const oldreviews = await knex('reviews').where({ _id: req.params.id }).limit(1);
+  // const users = await knex('users').whereIn('_id', await knex('reviews').select('user_id').where({ _id: req.params.id }));
+  const reviews = await knex('users').select(
+    'reviews._id as _id',
+    'reviews.adate as date',
+    'reviews.alanguage as language',
+    'reviews.title as title',
+    'reviews.adescription as description',
+    'reviews.rating as overall',
+    'reviews.ratinglocation as location',
+    'reviews.cleanliness as cleanliness',
+    'reviews.aservice as service',
+    'reviews.sleep_quality as sleep_quality',
+    'users.username as username',
+    'users.personname as name',
+    'users.astate as state',
+    'users.city as city',
+    'users.contributions as contributions',
+    'users.helpful_votes as helpful_votes'
+  ).innerJoin('reviews', 'reviews.user_id', 'users._id').limit(20);
+  console.log(reviews);
   const processedreviews = [];
   reviews.forEach((review) => {
     const score = {
-      overall: review.rating,
-      location: review.ratinglocation,
+      overall: review.overall,
+      location: review.location,
       cleanliness: review.cleanliness,
-      service: review.aservice,
+      service: review.service,
       sleep_quality: review.sleep_quality
     };
-    review.ratings = score;
-    review.name = review.aname;
-    review.date = new Date(review.adate);
-    review.description = review.adescription;
-    review.language = review.alanguage;
+    review.user_id = {
+      name: {
+        first_name: review.name.split(' ')[0],
+        last_name: review.name.split(' ')[1]
+      },
+      location: {
+        city: review.city,
+        state: review.state
+      },
+      helpful_votes: review.helpful_votes,
+      contributions: review.contributions
 
-    delete review.alanguage;
-    delete review.adescription;
-    delete review.adate;
-    delete review.aname;
+    };
+
+    review.ratings = score;
+    review.helpful_votes = parseInt(review.helpful_votes);
+    review.date = new Date(parseInt(review.date, 10));
+
+    delete review.city;
+    delete review.state;
     delete review.rating;
     delete review.ratinglocation;
     delete review.cleanliness;
@@ -125,6 +176,7 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
     delete review.sleep_quality;
     processedreviews.push(review);
   });
+  //console.log(processedreviews[0]);
   res.json(processedreviews);
 });
 
@@ -163,7 +215,9 @@ router.get('/hotels/:id/reviews/photos', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/roomtips', async (req, res) => {
+  console.log('in room tips with id');
   const roomTips = await knex('roomtips').where({ hotel_id: req.params.id }).limit(1);
+  console.log(roomTips);
   res.json(roomTips);
 });
 
@@ -273,6 +327,11 @@ router.get('/reviews/roomtips/:id', async (req, res) => {
 
 router.get('/reviews/photos', async (req, res) => {
   const photos = await knex('photos').limit(1);
+  // processedphotos = [];
+  // photos.forEach((photo) => {
+  //   const { user_id } = photo;
+  //   const await knex('users').where({ _id: user_id });
+  // });
   res.json(photos);
 });
 
