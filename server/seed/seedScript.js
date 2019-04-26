@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const seedMongo = require('./seedMongo');
 
-const mongoURI = process.env.DB_URI || 'mongodb://database/rickadvisor';
+const mongoURI = process.env.DB_URI || 'mongodb://localhost/rickadvisor';
 
 mongoose
   .connect(mongoURI, {

@@ -12,7 +12,7 @@ const reviewPropTypes = shape({
   traveler_type: string.isRequired,
   ratings: shape({
     _id: string.isRequired,
-    overall: number.isRequired,
+    rating: number.isRequired,
     cleanliness: number.isRequired,
     location: number.isRequired,
     service: number.isRequired,
