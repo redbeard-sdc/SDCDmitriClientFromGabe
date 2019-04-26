@@ -98,7 +98,6 @@ router.get('/hotel', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/general', async (req, res) => {
-  console.log('in reviews general with id');
   const reviews = await knex('reviews').where({ _id: req.params.id }).limit(1);
   const processedreviews = [];
   reviews.forEach((review) => {
@@ -111,7 +110,7 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
     };
     review.ratings = score;
     review.name = review.aname;
-    review.date = review.adate;
+    review.date = new Date(review.adate);
     review.description = review.adescription;
     review.language = review.alanguage;
 
@@ -126,7 +125,6 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
     delete review.sleep_quality;
     processedreviews.push(review);
   });
-  console.log(processedreviews);
   res.json(processedreviews);
 });
 
@@ -146,6 +144,7 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
 
 router.get('/hotels/:id/reviews/photos', async (req, res) => {
   const photos = await knex('photos').where({ hotel_id: req.params.id }).limit(1);
+  console.log(photos);
   res.json(photos);
 });
 
@@ -202,7 +201,6 @@ router.get('/hotels/:id/reviews/questions', async (req, res) => {
  */
 
 router.get('/reviews/general', async (req, res) => {
-  console.log('in reviews general ');
   const reviews = await knex('reviews').limit(1);
   res.json(reviews);
 });
@@ -220,7 +218,6 @@ router.get('/reviews/general', async (req, res) => {
  */
 
 router.get('/reviews/general/:id', async (req, res) => {
-  console.log('in reviews general id');
   const review = await knex('reviews').where({ _id: req.params.id }).limit(1);
   res.json(review);
 });

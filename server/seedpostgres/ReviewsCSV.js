@@ -50,15 +50,15 @@ const reviewBatch = (batchnum,batchsize,limit) => {
         const state = faker.address.state();
         const date = faker.date.between('2019-02-01', '2019-05-31');
         const title = faker.lorem.words(2);
-        const description = faker.lorem.words(2)
+        const description = faker.lorem.words(2);
         const helpful_votes = faker.random.number(10000);
-        const language = pickEnym(["English","Spanish","Dutch","Russian"])
+        const language = pickEnym(['English', 'Spanish', 'Dutch', 'Russian']);
         const rating = generateRating();
         const locationrating = generateRating();
         const cleaninessrating = generateRating();
         const servicerating = generateRating();
-        const sleepquality = generateRating();
-        const entry = [_id, user_id, hotel_id, username, name, city, state, date, title, description, language, helpful_votes,rating,locationrating, cleaninessrating, servicerating, sleepquality];
+        const sleep_quality = generateRating();
+        const entry = [_id, user_id, hotel_id, username, name, city, state, date, title, description, language, helpful_votes,rating,locationrating, cleaninessrating, servicerating, sleep_quality];
         data.push(entry);
     }
     return data;
@@ -87,7 +87,7 @@ var makebatchpromise = (databatch,batchnum) => {
 
 function seedReviews(limit, batchsize){
     var count = limit;
-    const dataheader = ['_id', 'user_id', 'hotel_id', 'username', 'name', 'city', 'state', 'date','title', 'description', 'language', 'helpful_votes', 'rating', 'locationrating', 'cleaninessrating', 'servicerating', 'sleepquality\n'];
+    const dataheader = ['_id', 'user_id', 'hotel_id', 'username', 'name', 'city', 'state', 'date','title', 'description', 'language', 'helpful_votes', 'rating', 'locationrating', 'cleaninessrating', 'servicerating', 'sleep_quality\n'];
     fs.writeFile('./files/Reviews.csv', dataheader, function(err){
         if(err){
             console.log('couldnt write header, STOPPING...')
