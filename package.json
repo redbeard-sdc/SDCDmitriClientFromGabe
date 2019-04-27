@@ -1,8 +1,8 @@
 {
   "name": "reviews_component_fec",
   "version": "1.0.0",
-  "description": "This is the Reviews component for our TripAdvisor clone for our Front-End Capstone",
-  "author": "Gabor Szekely",
+  "description": "This is the Reviews component for our TripAdvisor clone for our Front-End Capstone. The backend tests scaling",
+  "author": "Dmitri Tarasov(server optimization) & Gabor Szekely(Front-end components)",
   "license": "MIT",
   "engines": {
     "node": ">=6.13.0"

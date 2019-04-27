@@ -1,3 +1,6 @@
+const redis = require('redis');
+const { Pool } = require('pg');
+
 const knex = require('knex')({
   client: 'pg',
   connection: {
@@ -9,4 +12,9 @@ const knex = require('knex')({
   pool: { min: 2, max: 64 }
 });
 
-module.exports = { knex };
+const redisClient = redis.createClient({
+  host: 'localhost',
+  port: '6379'
+});
+
+module.exports = { knex, redisClient };

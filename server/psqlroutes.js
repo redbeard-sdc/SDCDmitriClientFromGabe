@@ -1,6 +1,24 @@
 const express = require('express');
 const pg = require('pg');
-const { knex } = require('./config');
+const { knex, redisClient } = require('./config');
+
+redisClient.on('error',(err) => {
+  console.log("error",err);
+});
+
+const rediscache = (req, res, next) => {
+  console.log('in cache');
+  const id = req.params.id;
+  redisClient.get(`${id}`, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else if (results !== null) {
+      res.json(JSON.parse(results));
+    } else {
+      next();
+    }
+  });
+};
 
 const router = express.Router();
 
@@ -47,8 +65,10 @@ router.get('/hotels', async (req, res) => {
     Access:         Public
  */
 
+
 router.get('/hotel', async (req, res) => {
-  let hotel = await knex('hotels').where({ _id: 100 });
+  const id = 1000;
+  let hotel = await knex('hotels').where({ _id: id });
   hotel = hotel[0];
   hotel.description = hotel.adescription;
   hotel.name = hotel.aname;
@@ -69,7 +89,7 @@ router.get('/hotel', async (req, res) => {
   delete hotel.zipcode;
   delete hotel.country;
 
-
+  // redisClient.set(id, JSON.stringify(hotel), 'EX', 3600);
   res.json(hotel);
 });
 
@@ -80,7 +100,7 @@ router.get('/hotel', async (req, res) => {
     Access:         Public
  */
 
-router.get('/hotels/:id/reviews/general', async (req, res) => {
+router.get('/hotels/:id/reviews/general', rediscache, async (req, res) => {
   const reviews = await knex('users').select(
     'reviews._id as _id',
     'reviews.adate as date',
@@ -139,6 +159,7 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
 
     processedreviews.push(review);
   });
+  redisClient.set(req.params.id, JSON.stringify(processedreviews), 'EX', 3600);
   res.json(processedreviews);
 });
 

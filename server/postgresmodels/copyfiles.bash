@@ -11,7 +11,7 @@ docker cp ./Questions.sql friendly_meitner:Questions.sql
 # docker cp ../seedpostgres/files/Reviews.csv friendly_meitner:Reviews.csv
 # docker cp ../seedpostgres/files/Hotels.csv friendly_meitner:Hotels.csv
 # docker cp ../seedpostgres/files/Photos.csv friendly_meitner:Photos.csv
-docker cp ../seedpostgres/files/RoomTips.csv friendly_meitner:RoomTips.csv
+# docker cp ../seedpostgres/files/RoomTips.csv friendly_meitner:RoomTips.csv
 # docker cp ../seedpostgres/files/Questions.csv friendly_meitner:Questions.csv
 
 # docker cp ./launchpsql.bash friendly_meitner:launchpsql.bash
