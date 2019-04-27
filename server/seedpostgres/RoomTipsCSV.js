@@ -34,11 +34,12 @@ const roomtipBatch = (batchnum,batchsize,limit) => {
     const data = [];
     for(let i = 0; i < batchsize; i++) {
         const hotel_id = generateRandomNumber(limit);
+        const review_id = generateRandomNumber(limit);
         const _id =  batchnum * batchsize + i;
         const tip = faker.lorem.words(2);
         const rating = Math.round(Math.random() * 5);
         const date = faker.date.between('2019-02-01', '2019-05-31');
-        const entry = [_id, hotel_id, date, tip, rating];
+        const entry = [_id, review_id, hotel_id, date, tip, rating];
         data.push(entry);
     }
     return data;

@@ -21,6 +21,8 @@ CREATE Table reviews(
 
 COPY reviews(_id, user_id, hotel_id, username, aname, city, astate, adate, title, adescription, alanguage, helpful_votes, rating, ratinglocation, cleanliness, aservice, sleep_quality) 
 FROM '/Reviews.csv' DELIMITER ',' CSV HEADER;
+CREATE INDEX user_id ON reviews (user_id);
+
 -- reviews
 --     -id
 --     -user_id

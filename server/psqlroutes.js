@@ -7,7 +7,8 @@ const knex = require('knex')({
     port: '5432',
     user: 'postgres',
     database: 'postgres'
-  }
+  },
+  pool: { min: 2, max: 64 }
 });
 
 // const User = require('./postgresmodels/Users.sql');
@@ -119,7 +120,7 @@ router.get('/hotel', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/general', async (req, res) => {
-  const oldreviews = await knex('reviews').where({ _id: req.params.id }).limit(1);
+  //const oldreviews = await knex('reviews').where({ _id: req.params.id }).limit(1);
   // const users = await knex('users').whereIn('_id', await knex('reviews').select('user_id').where({ _id: req.params.id }));
   const reviews = await knex('users').select(
     'reviews._id as _id',
@@ -139,7 +140,7 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
     'users.contributions as contributions',
     'users.helpful_votes as helpful_votes'
   ).innerJoin('reviews', 'reviews.user_id', 'users._id').limit(20);
-  console.log(reviews);
+  //console.log(reviews);
   const processedreviews = [];
   reviews.forEach((review) => {
     const score = {
@@ -174,6 +175,10 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
     delete review.cleanliness;
     delete review.aservice;
     delete review.sleep_quality;
+    delete review.name;
+    delete review.contributions;
+    delete review.helpful_votes;
+
     processedreviews.push(review);
   });
   //console.log(processedreviews[0]);
@@ -196,7 +201,7 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
 
 router.get('/hotels/:id/reviews/photos', async (req, res) => {
   const photos = await knex('photos').where({ hotel_id: req.params.id }).limit(1);
-  console.log(photos);
+  //console.log(photos);
   res.json(photos);
 });
 
@@ -215,9 +220,9 @@ router.get('/hotels/:id/reviews/photos', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/roomtips', async (req, res) => {
-  console.log('in room tips with id');
+  //console.log('in room tips with id');
   const roomTips = await knex('roomtips').where({ hotel_id: req.params.id }).limit(1);
-  console.log(roomTips);
+  //console.log(roomTips);
   res.json(roomTips);
 });
 

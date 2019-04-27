@@ -8,13 +8,14 @@ CREATE Table roomtips(
     rating integer
 );
 
-COPY roomtips(_id,review_id,,hotel_id,adate,tip,rating)
+COPY roomtips(_id,review_id,hotel_id,adate,tip,rating)
 FROM '/RoomTips.csv' DELIMITER ',' CSV HEADER;
 
 
 --      roomTips
 --           - id
---           - reviewid
+--           - review_id
+--           - hotel_id
 --           - date
 --           - tip
 --           - rating

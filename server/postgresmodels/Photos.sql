@@ -8,8 +8,8 @@ CREATE Table photos(
     adescription varchar(255),
     likes integer,
     category varChar(255),
-    ADD FOREIGN KEY (hotel_id) REFERENCES hotels (_id);
-    ADD FOREIGN KEY (user_id) REFERENCES users (_id);
+    FOREIGN KEY (hotel_id) REFERENCES hotels (_id)
+    FOREIGN KEY (user_id) REFERENCES users (_id)
 
 );
 

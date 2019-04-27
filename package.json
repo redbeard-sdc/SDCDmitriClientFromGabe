@@ -33,11 +33,13 @@
     "faker": "^4.1.0",
     "knex": "^0.16.5",
     "mongoose": "^5.4.20",
+    "newrelic": "^5.7.0",
     "pg": "^7.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "react-loading-skeleton": "^1.1.1",
+    "redis": "^2.8.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
