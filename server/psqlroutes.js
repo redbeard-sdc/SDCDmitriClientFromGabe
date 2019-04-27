@@ -1,27 +1,8 @@
 const express = require('express');
 const pg = require('pg');
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    database: 'postgres'
-  },
-  pool: { min: 2, max: 64 }
-});
-
-// const User = require('./postgresmodels/Users.sql');
-// const Hotel = require('./postgresmodels/Hotels.sql');
-// const Review = require('./postgresmodels/Photos.sql');
-// const Question = require('./postgresmodels/Questions.sql');
-// const Photo = require('./postgresmodels/Reviews.sql');
-// const RoomTip = require('./postgresmodels/RoomTips.sql');
-// const Answer = require('./postgresmodels/Answers.sql');
-
+const { knex } = require('./config');
 
 const router = express.Router();
-
 
 /*
     Route:          /api/users
@@ -35,11 +16,6 @@ router.get('/users', async (req, res) => {
   res.json(users);
 });
 
-// router.get('/users', async (req, res) => {
-//   const users = await User.find({});
-//   res.json(users);
-// });
-
 /*
     Route:          /api/hotels/:id
     Method:         GET
@@ -52,11 +28,6 @@ router.get('/users/:id', async (req, res) => {
   res.json(user);
 });
 
-// router.get('/users/:id', async (req, res) => {
-//   const user = await User.find({ _id: req.params.id });
-//   res.json(user);
-// });
-
 /*
     Route:          /api/hotels
     Method:         GET
@@ -68,11 +39,6 @@ router.get('/hotels', async (req, res) => {
   const hotels = await knex('hotels').limit(10);
   res.json(hotels);
 });
-
-// router.get('/hotels', async (req, res) => {
-//   const hotels = await Hotel.find({});
-//   res.json(hotels);
-// });
 
 /*
     Route:          /api/hotels/random
@@ -107,11 +73,6 @@ router.get('/hotel', async (req, res) => {
   res.json(hotel);
 });
 
-// router.get('/hotel', async (req, res) => {
-//   const hotels = await Hotel.find({});
-//   res.json(hotels[0]);
-// });
-
 /*
     Route:          /api/hotels/:id/reviews/general
     Method:         GET
@@ -120,8 +81,6 @@ router.get('/hotel', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/general', async (req, res) => {
-  //const oldreviews = await knex('reviews').where({ _id: req.params.id }).limit(1);
-  // const users = await knex('users').whereIn('_id', await knex('reviews').select('user_id').where({ _id: req.params.id }));
   const reviews = await knex('users').select(
     'reviews._id as _id',
     'reviews.adate as date',
@@ -140,7 +99,6 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
     'users.contributions as contributions',
     'users.helpful_votes as helpful_votes'
   ).innerJoin('reviews', 'reviews.user_id', 'users._id').limit(20);
-  //console.log(reviews);
   const processedreviews = [];
   reviews.forEach((review) => {
     const score = {
@@ -181,16 +139,8 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
 
     processedreviews.push(review);
   });
-  //console.log(processedreviews[0]);
   res.json(processedreviews);
 });
-
-// router.get('/hotels/:id/reviews/general', async (req, res) => {
-//   const reviews = await Review.find({ hotel_id: req.params.id })
-//     .populate('user_id')
-//     .exec();
-//   res.json(reviews);
-// });
 
 /*
     Route:          /api/hotels/:id/reviews/photos
@@ -201,16 +151,8 @@ router.get('/hotels/:id/reviews/general', async (req, res) => {
 
 router.get('/hotels/:id/reviews/photos', async (req, res) => {
   const photos = await knex('photos').where({ hotel_id: req.params.id }).limit(1);
-  //console.log(photos);
   res.json(photos);
 });
-
-// router.get('/hotels/:id/reviews/photos', async (req, res) => {
-//   const photos = await Photo.find({ hotel_id: req.params.id })
-//     .populate('user_id')
-//     .exec();
-//   res.json(photos);
-// });
 
 /*
     Route:          /api/hotels/:id/reviews/roomtips
@@ -220,18 +162,9 @@ router.get('/hotels/:id/reviews/photos', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/roomtips', async (req, res) => {
-  //console.log('in room tips with id');
   const roomTips = await knex('roomtips').where({ hotel_id: req.params.id }).limit(1);
-  //console.log(roomTips);
   res.json(roomTips);
 });
-
-// router.get('/hotels/:id/reviews/roomtips', async (req, res) => {
-//   const roomTips = await RoomTip.find({ hotel_id: req.params.id })
-//     .populate('user_id')
-//     .exec();
-//   res.json(roomTips);
-// });
 
 /*
     Route:          /api/hotels/:id/reviews/questions
@@ -245,13 +178,6 @@ router.get('/hotels/:id/reviews/questions', async (req, res) => {
   res.json(questions);
 });
 
-// router.get('/hotels/:id/reviews/questions', async (req, res) => {
-//   const questions = await Question.find({ hotel_id: req.params.id })
-//     .populate('user_id')
-//     .exec();
-//   res.json(questions);
-// });
-
 /*
     Route:          /api/reviews/general
     Method:         GET
@@ -263,11 +189,6 @@ router.get('/reviews/general', async (req, res) => {
   const reviews = await knex('reviews').limit(1);
   res.json(reviews);
 });
-
-// router.get('/reviews/general', async (req, res) => {
-//   const reviews = await Review.find({});
-//   res.json(reviews);
-// });
 
 /*
     Route:          /api/reviews/general/:id
@@ -281,14 +202,6 @@ router.get('/reviews/general/:id', async (req, res) => {
   res.json(review);
 });
 
-// router.get('/reviews/general/:id', async (req, res) => {
-//   const review = await Review.find({ _id: req.params.id })
-//     .populate('hotel_id')
-//     .populate('user_id')
-//     .exec();
-//   res.json(review);
-// });
-
 /*
     Route:          /api/reviews/roomtips
     Method:         GET
@@ -301,11 +214,6 @@ router.get('/reviews/roomtips', async (req, res) => {
   res.json(roomtips);
 });
 
-// router.get('/reviews/roomtips', async (req, res) => {
-//   const roomtips = await RoomTip.find({});
-//   res.json(roomtips);
-// });
-
 /*
     Route:          /api/reviews/roomtips/:id
     Method:         GET
@@ -317,11 +225,6 @@ router.get('/reviews/roomtips/:id', async (req, res) => {
   const roomtip = await knex('roomtips').where({ _id: req.params.id }).limit(1);
   res.json(roomtip);
 });
-
-// router.get('/reviews/roomtips/:id', async (req, res) => {
-//   const roomtip = await RoomTip.find({ _id: req.params.id });
-//   res.json(roomtip);
-// });
 
 /*
     Route:          /api/reviews/photos
@@ -340,11 +243,6 @@ router.get('/reviews/photos', async (req, res) => {
   res.json(photos);
 });
 
-// router.get('/reviews/photos', async (req, res) => {
-//   const photos = await Photo.find({});
-//   res.json(photos);
-// });
-
 /*
     Route:          /api/reviews/photos/:id
     Method:         GET
@@ -356,11 +254,6 @@ router.get('/reviews/photos/:id', async (req, res) => {
   const photo = await knex('photos').where({ _id: req.params.id }).limit(1);
   res.json(photo);
 });
-
-// router.get('/reviews/photos/:id', async (req, res) => {
-//   const photo = await Photo.find({ _id: req.params.id });
-//   res.json(photo);
-// });
 
 /*
     Route:          /api/reviews/questions
@@ -374,11 +267,6 @@ router.get('/reviews/questions', async (req, res) => {
   res.json(questions);
 });
 
-// router.get('/reviews/questions', async (req, res) => {
-//   const questions = await Question.find({});
-//   res.json(questions);
-// });
-
 /*
     Route:          /api/reviews/questions/:id
     Method:         GET
@@ -390,11 +278,6 @@ router.get('/reviews/questions/:id', async (req, res) => {
   const question = await knex('questions').where({ _id: req.params.id }).limit(1);
   res.json(question);
 });
-
-// router.get('/reviews/questions/:id', async (req, res) => {
-//   const question = await Question.find({ _id: req.params.id });
-//   res.json(question);
-// });
 
 /*
     Route:          /api/reviews/questions/:id/answers
@@ -408,13 +291,6 @@ router.get('/reviews/questions/:id/answers', async (req, res) => {
   res.json(answers);
 });
 
-// router.get('/reviews/questions/:id/answers', async (req, res) => {
-//   const answers = await Answer.find({ question_id: req.params.id })
-//     .populate('user_id')
-//     .exec();
-//   res.json(answers);
-// });
-
 /*
     Route:          /api/reviews/answers
     Method:         GET
@@ -426,12 +302,6 @@ router.get('/reviews/answers', async (req, res) => {
   const answers = await knex('answers').limit(1);
   res.json(answers);
 });
-// router.get('/reviews/answers', async (req, res) => {
-//   const answers = await Answer.find({})
-//     .populate('question_id')
-//     .exec();
-//   res.json(answers);
-// });
 
 /*
     Route:          /api/reviews/answers/:id
@@ -444,12 +314,5 @@ router.get('/reviews/answers/:id', async (req, res) => {
   const answer = await knex('answers').where({ _id: req.params.id }).limit(1);
   res.json(answer);
 });
-
-// router.get('/reviews/answers/:id', async (req, res) => {
-//   const answer = await Answer.find({ _id: req.params.id })
-//     .populate('question_id')
-//     .exec();
-//   res.json(answer);
-// });
 
 module.exports = router;
