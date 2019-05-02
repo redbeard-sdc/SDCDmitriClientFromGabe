@@ -13,7 +13,7 @@ const rediscache = (req, res, next) => {
     if (err) {
       console.log(err);
     } else if (results !== null) {
-      res.json(JSON.parse(results));
+      return res.json(JSON.parse(results));
     } else {
       next();
     }
@@ -101,6 +101,7 @@ router.get('/hotel', async (req, res) => {
  */
 
 router.get('/hotels/:id/reviews/general', rediscache, async (req, res) => {
+  console.log('hi in general reviews route');
   const reviews = await knex('users').select(
     'reviews._id as _id',
     'reviews.adate as date',
@@ -119,47 +120,38 @@ router.get('/hotels/:id/reviews/general', rediscache, async (req, res) => {
     'users.contributions as contributions',
     'users.helpful_votes as helpful_votes'
   ).innerJoin('reviews', 'reviews.user_id', 'users._id').limit(20);
-  const processedreviews = [];
-  reviews.forEach((review) => {
-    const score = {
-      overall: review.overall,
-      location: review.location,
-      cleanliness: review.cleanliness,
-      service: review.service,
-      sleep_quality: review.sleep_quality
-    };
-    review.user_id = {
-      name: {
-        first_name: review.name.split(' ')[0],
-        last_name: review.name.split(' ')[1]
+  const processedreviews = reviews.map((review) => {
+    let cleanReview = {
+      _id: review._id,
+      date: new Date(parseInt(review.date, 10)),
+      language: review.language,
+      title: review.title,
+      description: review.description,
+      ratings: {
+        overall: review.overall,
+        location: review.location,
+        cleanliness: review.cleanliness,
+        service: review.service,
+        sleep_quality: review.sleep_quality
       },
-      location: {
-        city: review.city,
-        state: review.state
+      user_id: {
+        username: review.username,
+        name: {
+          first_name: review.name.split(' ')[0],
+          last_name: review.name.split(' ')[1]
+        },
+        location: {
+          city: review.city,
+          state: review.state
+        },
+        helpful_votes: review.helpful_votes,
+        contributions: review.contributions
+  
       },
-      helpful_votes: review.helpful_votes,
-      contributions: review.contributions
-
+      helpful_votes: parseInt(review.helpful_votes),
     };
-
-    review.ratings = score;
-    review.helpful_votes = parseInt(review.helpful_votes);
-    review.date = new Date(parseInt(review.date, 10));
-
-    // delete review.city;
-    // delete review.state;
-    // delete review.rating;
-    // delete review.ratinglocation;
-    // delete review.cleanliness;
-    // delete review.aservice;
-    // delete review.sleep_quality;
-    // delete review.name;
-    // delete review.contributions;
-    // delete review.helpful_votes;
-
-    processedreviews.push(review);
+    return cleanReview;
   });
-  console.log(req.params.id, processedreviews.length);
   redisClient.set(req.params.id, JSON.stringify(processedreviews), 'EX', 3600);
   res.json(processedreviews);
 });

@@ -8,7 +8,8 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run build\"",
+    "start": "node server/index.js",
+    "altstart": "concurrently \"npm run server\" \"npm run build\"",
     "startdocker": "concurrently \"npm run server\" \"npm run dockerbuild\"",
     "docker": "concurrently \"npm run seed\" \"npm run server\"",
     "dev": "webpack --mode development --watch",

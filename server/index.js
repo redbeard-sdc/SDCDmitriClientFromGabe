@@ -1,4 +1,4 @@
-const { localenv } = 
+const { localenv } = require('./envconfig')
 require('newrelic');
 const path = require('path');
 const express = require('express');
@@ -20,4 +20,4 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/api', apiRoutes);
 
-app.listen(port, () => console.log(`Express server running on port ${port}`));
+app.listen(port, () => console.log(`Express server on port ${port}`));
