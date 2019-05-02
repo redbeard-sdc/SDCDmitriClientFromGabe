@@ -2,12 +2,12 @@ const express = require('express');
 const pg = require('pg');
 const { knex, redisClient } = require('./config');
 
-redisClient.on('error',(err) => {
-  console.log("error",err);
+redisClient.on('error', (err) => {
+  console.log('error', err);
 });
 
 const rediscache = (req, res, next) => {
-  console.log('in cache');
+  // console.log('in cache');
   const id = req.params.id;
   redisClient.get(`${id}`, (err, results) => {
     if (err) {
@@ -146,19 +146,20 @@ router.get('/hotels/:id/reviews/general', rediscache, async (req, res) => {
     review.helpful_votes = parseInt(review.helpful_votes);
     review.date = new Date(parseInt(review.date, 10));
 
-    delete review.city;
-    delete review.state;
-    delete review.rating;
-    delete review.ratinglocation;
-    delete review.cleanliness;
-    delete review.aservice;
-    delete review.sleep_quality;
-    delete review.name;
-    delete review.contributions;
-    delete review.helpful_votes;
+    // delete review.city;
+    // delete review.state;
+    // delete review.rating;
+    // delete review.ratinglocation;
+    // delete review.cleanliness;
+    // delete review.aservice;
+    // delete review.sleep_quality;
+    // delete review.name;
+    // delete review.contributions;
+    // delete review.helpful_votes;
 
     processedreviews.push(review);
   });
+  console.log(req.params.id, processedreviews.length);
   redisClient.set(req.params.id, JSON.stringify(processedreviews), 'EX', 3600);
   res.json(processedreviews);
 });

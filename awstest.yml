@@ -1,6 +1,6 @@
 # load-test.yaml
 config:
-  target: 'http://ec2-18-234-162-20.compute-1.amazonaws.com'
+  target: 'http://ec2-34-201-127-11.compute-1.amazonaws.com'
   phases:
     - duration: 30
       arrivalRate: 100
