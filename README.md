@@ -10,8 +10,8 @@
 1. [Usage](#Usage)
 2. [Technologies](#Technologies)
 3. [Requirements](#Requirements)
-4. [Install] (#Install)
-5. [License] (#License)
+4. [Install](#Install)
+5. [License](#License)
 
 ## Usage
 
@@ -34,7 +34,7 @@ An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
 - docker-compose 3
 
 
-### Installing Dependencies
+## Install
 
 From within the root directory:
 
