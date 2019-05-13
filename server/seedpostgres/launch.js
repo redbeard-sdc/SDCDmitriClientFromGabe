@@ -11,8 +11,8 @@ const batchsize = 1000;
 
 //seedHotels(limit, batchsize);
 //seedUsers(limit, batchsize);
-seedReviews(limit, batchsize);
+//seedReviews(limit, batchsize);
 //seedAnswers(limit, batchsize);
 //seedPhotos(limit, batchsize);
 //seedQuestions(limit, batchsize);
-//seedRoomTips(limit, batchsize);
+seedRoomTips(limit, batchsize);

@@ -5,8 +5,16 @@ services:
     build: .
     depends_on:
       - 'database'
+      - 'redis'
     ports:
-      - '3000:3000'
-
-  database:
-    image: mongo:latest
+      - '3100:3100'
+  database: 
+    image: 'postgres'
+    container_name: 'friendly_meitner'
+    ports:
+      - '5432:5432/tcp'
+  redis:
+    image: 'redis'
+    container_name: 'redis-devel'
+    ports: 
+      - '6379:6379/tcp'

@@ -1,6 +1,7 @@
 //  photos
 //      - _id
 //      - hotel_id
+//      - user_id
 //      - url
 //      - date
 //      - description
@@ -18,6 +19,7 @@ const photoBatch = (batchnum, batchsize, limit) => {
     const data = [];
     for(let i = 0; i < batchsize; i++) {
         const hotel_id = generateRandomNumber(limit);
+        const user_id = generateRandomNumber(limit);
         const _id = batchnum * batchsize + i;
         const url = pickEnym(imagesenym);
         const date = faker.date.between('2019-02-01', '2019-05-31');
@@ -31,7 +33,7 @@ const photoBatch = (batchnum, batchsize, limit) => {
             'Business Center & Event Rooms',
             'Family and Play Areas',
         ]);
-        const entry = [_id, hotel_id, url, date, description, likes, category];
+        const entry = [_id, hotel_id, user_id, url, date, description, likes, category];
         data.push(entry);
     }
     return data;
@@ -60,7 +62,7 @@ var makebatchpromise = (databatch,batchnum) => {
 
 function seedPhotos(limit, batchsize){
     var count = limit;
-    const dataheader = ['_id', 'hotel_id', 'url', 'date', 'description', 'likes', 'catagory\n']
+    const dataheader = ['_id', 'hotel_id', 'user_id', 'url', 'date', 'description', 'likes', 'catagory\n']
     fs.writeFile('./files/Photos.csv', dataheader, function(err){
         if(err){
             console.log('couldnt write header, STOPPING...')

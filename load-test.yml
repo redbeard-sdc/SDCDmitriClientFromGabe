@@ -1,0 +1,11 @@
+# load-test.yaml
+config:
+  target: 'http://localhost:3100'
+  phases:
+    - duration: 20
+      arrivalRate: 700
+
+scenarios:
+  - flow:
+    - get:
+        url: "/api/hotels/1000/reviews/general"
