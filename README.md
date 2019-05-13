@@ -56,4 +56,4 @@ go to the awstest.yml and change the uri link to the one in the ecs instance.
 ```
 
 ## License
-refer to this [License](https://github.com/redbeard-sdc/SDCDmitriClientFromGabe/LICENSE.md)
+refer to this [License](https://github.com/redbeard-sdc/SDCDmitriClientFromGabe/blob/master/LICENSE.md)
